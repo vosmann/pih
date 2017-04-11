@@ -63,6 +63,32 @@ and' :: Bool -> Bool -> Bool
 and' x y = if x then y else False
 
 -- 4.8.7
+mult :: Int -> Int -> Int -> Int
+mult x y z = x*y*z
+
+mult' :: Int -> Int -> Int -> Int
+mult' = \x -> \y -> \z -> x*y*z
+
+-- 4.8.8 -- Luhn
+luhnDouble :: Int -> Int
+luhnDouble x | doubled > 9 = doubled - 9
+             | otherwise   = doubled
+               where doubled = 2 * x
+
+luhn :: Int -> Int -> Int -> Int -> Bool
+luhn a b c d | sum `mod` 10 == 0 = True
+             | otherwise = False
+             where sum = (luhnDouble a) + b + (luhnDouble c) + d
+
+
+
+
+
+
+
+
+
+
 
 
 
