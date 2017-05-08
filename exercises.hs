@@ -169,10 +169,10 @@ euclid x y | x == y = x
 -- 1 : 2 : []
 
 -- 6.8.6.a
-and' :: [Bool] -> Bool
-and' [] = True
-and' (x:xs) | x == False = False
-            | otherwise = and' xs
+and'' :: [Bool] -> Bool
+and'' [] = True
+and'' (x:xs) | x == False = False
+            | otherwise = and'' xs
 
 -- 6.8.6.b
 concat' :: [[a]] -> [a]
@@ -199,15 +199,17 @@ elem' x (y:ys) | x == y = True
 merge :: Ord a => [a] -> [a] -> [a]
 merge xs [] = xs
 merge [] ys = ys
-merge (x:xs) (y:ys) | x <= y = x : y : merge xs ys
-                    | otherwise = y : x : merge xs ys
+merge (x:xs) (y:ys) | x <= y = x : merge xs (y:ys)
+                    | otherwise = y : merge (x:xs) ys
 
 -- 6.8.8
-halve :: [a] -> ([a], [a])
-halve xs = (take half xs, drop half xs)
-    where half = length xs `div` 2
+--halve :: [a] -> ([a], [a])
+--halve xs = (take half xs, drop half xs)
+--    where half = length xs `div` 2
 
 msort :: Ord a => [a] -> [a]
+msort [] = []
+msort (x:[]) = x:[]
 msort xs = merge (msort $ fst halves) (msort $ snd halves)
     where halves = halve xs
 
