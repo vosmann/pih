@@ -81,25 +81,144 @@ luhn a b c d | sum `mod` 10 == 0 = True
              where sum = (luhnDouble a) + b + (luhnDouble c) + d
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 -- Chapter 5: List comprehensions
+
+-- 5.7.1
+sumSquaresTo n = sum [x*x | x <- [1..n]]
+
+-- 5.7.2
+grid :: Int -> Int -> [(Int, Int)]
+grid m n = [(x, y) | x <- [0..m], y <- [0..n]]
+
+-- 5.7.3
+square :: Int -> [(Int, Int)]
+square n = [(x, y) | (x, y) <- grid n n, x /= y]
+
+-- 5.7.4
+replicate' :: Int -> a -> [a]
+replicate' n x = [x | _ <- [1..n]]
+
+-- 5.7.5
+pyths :: Int -> [(Int, Int, Int)]
+pyths n = [(x, y, z) | x <- [1..n], y <- [1..n], z <- [1..n], x^2 + y^2 == z^2]
+
+-- 5.7.6
+factors :: Int -> [Int]
+factors n = [x | x <- [1..(n `div` 2)], n `mod` x == 0 ]
+
+perfects :: Int -> [Int]
+perfects n = [x | x <- [1..n], x == (sum $ factors x)]
+
+-- 5.7.7
+oneComprehensionTwoGenerators = [(x, y) | x <- [1, 2], y <- [3, 4]]
+twoComprehensionsOneGenerator = [pair | pair <- concat [[(1, y1) | y1 <- [3, 4]], [(2, y2) | y2 <- [3, 4]]]]
+twoComprehensionsOneGenerator' = concat [ [(x, y) | x <- [1, 2]] | y <- [3, 4] ]
+
+-- 5.7.8
+find :: Eq a => a -> [(a, b)] -> [b]
+find k t = [v' | (k', v') <- t, k == k' ]
+
+positions :: Eq a => a -> [a] -> [Int]
+positions x xs = [i | (x', i) <- zip xs [0..], x == x']
+
+positions' :: Eq a => a -> [a] -> [Int]
+positions' x xs = find x $ zip xs [0..]
+
+-- 5.7.9
+scalarproduct :: [Int] -> [Int] -> Int
+scalarproduct xs ys = sum [x * y | (x, y) <- zip xs ys]
+
+-- 5.7.10
+
+
+-- 6.8.1
+factorial :: Int -> Int
+factorial 0 = 1
+factorial n | n > 0 = n * factorial (n-1)
+            | otherwise = 1
+
+-- 6.8.2
+sumdown :: Int -> Int
+sumdown 0 = 0
+sumdown n = n + sumdown (n-1)
+
+-- 6.8.3
+exp' :: Int -> Int -> Int
+b `exp'` 0 = 1
+b `exp'` e = b * (b `exp'` (e-1))
+
+-- 6.8.4
+euclid :: Int -> Int -> Int
+euclid x y | x == y = x
+           | x > y = euclid (x-y) y
+           | otherwise = euclid x (y-x)
+
+-- 6.8.5
+-- length [1,2,3]
+-- 1 + (1 + (1 + 0))
+
+-- drop 3 [1,2,3,4,5]
+-- drop 2 [2,3,4,5]
+-- drop 1 [3,4,5]
+-- drop 0 [4,5]
+-- [4,5]
+
+-- init [1,2,3]
+-- 1 : init [2, 3]
+-- 1 : 2 : init [3]
+-- 1 : 2 : []
+
+-- 6.8.6.a
+and' :: [Bool] -> Bool
+and' [] = True
+and' (x:xs) | x == False = False
+            | otherwise = and' xs
+
+-- 6.8.6.b
+concat' :: [[a]] -> [a]
+concat' [] = []
+concat' (xs:xss) = xs ++ concat' xss
+
+-- 6.8.6.c
+replicate'' :: Int -> a -> [a]
+replicate'' 0 x = []
+replicate'' n x = x : replicate' (n-1) x
+
+-- 6.8.6.d
+atIndex :: [a] -> Int -> a
+atIndex (x:xs) 0 = x
+atIndex (x:xs) n = atIndex xs (n-1)
+
+-- 6.8.6.e
+elem' :: Eq a => a -> [a] -> Bool
+elem' x [] = False
+elem' x (y:ys) | x == y = True
+               | otherwise = elem' x ys
+
+-- 6.8.7
+merge :: Ord a => [a] -> [a] -> [a]
+merge xs [] = xs
+merge [] ys = ys
+merge (x:xs) (y:ys) | x <= y = x : y : merge xs ys
+                    | otherwise = y : x : merge xs ys
+
+-- 6.8.8
+halve :: [a] -> ([a], [a])
+halve xs = (take half xs, drop half xs)
+    where half = length xs `div` 2
+
+msort :: Ord a => [a] -> [a]
+msort xs = merge (msort $ fst halves) (msort $ snd halves)
+    where halves = halve xs
+
+-- 6.8.9
+
+
+
+
+
+
+
+
 -- Chapter 6: Recursion
 -- Chapter 7: Higer-order functions
