@@ -221,6 +221,7 @@ filt p f xs = [f x | x <- xs, p x]
 filt' p f   = map f . filter p 
 
 -- 7.9.2
+-- a
 all' :: (a -> Bool) -> [a] -> Bool
 all' f []     = True
 all' f (x:xs) = f x && all' f xs
@@ -228,6 +229,7 @@ all' f (x:xs) = f x && all' f xs
 all'' :: (a -> Bool) -> [a] -> Bool
 all'' f = and . map f
 
+-- b
 any' :: (a -> Bool) -> [a] -> Bool
 any' f []     = False
 any' f (x:xs) = f x || any' f xs
@@ -235,20 +237,33 @@ any' f (x:xs) = f x || any' f xs
 any'' :: (a -> Bool) -> [a] -> Bool
 any'' f = or . map f
 
+-- c
 takeWhile' :: (a -> Bool) -> [a] -> [a]
 takeWhile' f [] = []
 takeWhile' f (x:xs) | f x       = x : takeWhile' f xs
                     | otherwise = []
 
+-- d
 dropWhile' :: (a -> Bool) -> [a] -> [a]
 dropWhile' p []     = []
 dropWhile' p (x:xs) | p x = dropWhile' p xs
                     | otherwise = x:xs
 
 -- 7.9.3
--- 7.9.4
--- 7.9.5
+mapf f = foldr (\x xs -> f x : xs) []
 
+filterp p = foldr (\x xs -> if p x then x : xs else xs) []
+
+-- 7.9.4
+dec2int :: [Int] -> Int
+dec2int = foldl (\x y -> 10*x + y) 0
+
+-- 7.9.5
+curry :: ((a,b) -> c) -> (a -> b -> c)
+curry f = \x y -> f (x,y)
+
+uncurry :: (a -> b -> c) -> ((a,b) -> c)
+uncurry f = \(x,y) -> f x y
 
 
 
