@@ -33,11 +33,11 @@ safetail'' (_:xs) = xs
 
 -- 4.8.4
 -- a
-(||) :: Bool -> Bool -> Bool
-False || False = False
-False || True = True
-True || False = True
-True || True = True
+(|||) :: Bool -> Bool -> Bool
+False ||| False = False
+False ||| True = True
+True ||| False = True
+True ||| True = True
 
 -- b
 or' :: Bool -> Bool -> Bool
@@ -55,12 +55,12 @@ or''' x y | x == y = x
           | otherwise = True
 
 -- 4.8.5
-and :: Bool -> Bool -> Bool
-and x y = if x then (if y then True else False) else False
+and' :: Bool -> Bool -> Bool
+and' x y = if x then (if y then True else False) else False
 
 -- 4.8.6
-and' :: Bool -> Bool -> Bool
-and' x y = if x then y else False
+and'' :: Bool -> Bool -> Bool
+and'' x y = if x then y else False
 
 -- 4.8.7
 mult :: Int -> Int -> Int -> Int
@@ -128,8 +128,8 @@ positions' x xs = find x $ zip xs [0..]
 scalarproduct :: [Int] -> [Int] -> Int
 scalarproduct xs ys = sum [x * y | (x, y) <- zip xs ys]
 
--- 5.7.10
 
+-- Chapter 6: Recursion
 
 -- 6.8.1
 factorial :: Int -> Int
@@ -169,10 +169,10 @@ euclid x y | x == y = x
 -- 1 : 2 : []
 
 -- 6.8.6.a
-and'' :: [Bool] -> Bool
-and'' [] = True
-and'' (x:xs) | x == False = False
-            | otherwise = and'' xs
+and''' :: [Bool] -> Bool
+and''' [] = True
+and''' (x:xs) | x == False = False
+            | otherwise = and''' xs
 
 -- 6.8.6.b
 concat' :: [[a]] -> [a]
@@ -213,14 +213,47 @@ msort (x:[]) = x:[]
 msort xs = merge (msort $ fst halves) (msort $ snd halves)
     where halves = halve xs
 
--- 6.8.9
 
-
-
-
-
-
-
-
--- Chapter 6: Recursion
 -- Chapter 7: Higer-order functions
+
+-- 7.9.1
+filt p f xs = [f x | x <- xs, p x]
+filt' p f   = map f . filter p 
+
+-- 7.9.2
+all' :: (a -> Bool) -> [a] -> Bool
+all' f []     = True
+all' f (x:xs) = f x && all' f xs
+
+all'' :: (a -> Bool) -> [a] -> Bool
+all'' f = and . map f
+
+any' :: (a -> Bool) -> [a] -> Bool
+any' f []     = False
+any' f (x:xs) = f x || any' f xs
+
+any'' :: (a -> Bool) -> [a] -> Bool
+any'' f = or . map f
+
+takeWhile' :: (a -> Bool) -> [a] -> [a]
+takeWhile' f [] = []
+takeWhile' f (x:xs) | f x       = x : takeWhile' f xs
+                    | otherwise = []
+
+dropWhile' :: (a -> Bool) -> [a] -> [a]
+dropWhile' p []     = []
+dropWhile' p (x:xs) | p x = dropWhile' p xs
+                    | otherwise = x:xs
+
+-- 7.9.3
+-- 7.9.4
+-- 7.9.5
+
+
+
+
+
+
+
+
+
