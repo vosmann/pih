@@ -330,9 +330,19 @@ channel = id
 transmit :: String -> String
 transmit = decode . channel . encode
 
-
 -- 7.9.8
+faultychannel :: [Bit] -> [Bit]
+faultychannel = tail
+
+transmit' :: String -> String
+transmit' = decode' . faultychannel . encode'
+
+
+
 -- 7.9.9
+
+
+-- 7.9.10
 
 
 
