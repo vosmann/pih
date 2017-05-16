@@ -1,17 +1,8 @@
 import Data.Char
-
 type Bit = Int
-
 weights = map (2^) [0,1..]
-
 bin2int' :: [Bit] -> Int
 bin2int' bits = sum [ w*b | (w, b) <- zip weights bits]
---   [a,b,c,d]
--- = 1*a + 2*b + 4*c + 8*d 
--- = a + 2*(b + 2*c + 4*d) 
--- = a + 2*(b + 2*(c + 2*d) 
--- = a + 2*(b + 2*(c + 2*(d + 2*0)) 
-
 bin2int :: [Bit] -> Int
 bin2int = foldr (\x y -> x + 2*y) 0
 
