@@ -348,7 +348,6 @@ luhn' :: [Int] -> Bool
 luhn' = (==0) . (`mod` 10) . sum . altMap id (subtract . (*2)) . reverse
     where subtract n | n > 9     = n - 9
                      | otherwise = n
-
-
-
+--luhn' [1,5,6,7,6,6,6,4,4] == True
+--luhn' [4,9,9,2,7,3,9,8,7,1,6] == True
 
