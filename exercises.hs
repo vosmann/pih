@@ -344,10 +344,10 @@ altMap f g (x:xs) = f x : altMap g f xs
 -- altMap (+10) (+100) [0,1,2,3,4] = [10,101,12,103,14]
 
 -- 7.9.10
-
-
-
-
+luhn' :: [Int] -> Bool
+luhn' = (==0) . (`mod` 10) . sum . altMap id (subtract . (*2)) . reverse
+    where subtract n | n > 9     = n - 9
+                     | otherwise = n
 
 
 
