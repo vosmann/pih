@@ -337,10 +337,11 @@ faultychannel = tail
 transmit' :: String -> String
 transmit' = decode' . faultychannel . encode'
 
-
-
 -- 7.9.9
-
+altMap :: (a -> b) -> (a -> b) -> [a] -> [b]
+altMap f g []     = []
+altMap f g (x:xs) = f x : altMap g f xs
+-- altMap (+10) (+100) [0,1,2,3,4] = [10,101,12,103,14]
 
 -- 7.9.10
 
