@@ -1,4 +1,5 @@
 import Data.Char
+import Data.Ord
 
 -- Chapter 4: Defining functions
 
@@ -350,4 +351,48 @@ luhn' = (==0) . (`mod` 10) . sum . altMap id (subtract . (*2)) . reverse
                      | otherwise = n
 --luhn' [1,5,6,7,6,6,6,4,4] == True
 --luhn' [4,9,9,2,7,3,9,8,7,1,6] == True
+
+
+-- Chapter 8: Declaring types and classes
+
+-- 8.9.1
+data Nat = Zero | Succ Nat
+    deriving (Eq, Ord, Show)
+
+add :: Nat -> Nat -> Nat
+add Zero     n = n
+add (Succ m) n = Succ (add m n)
+
+mult'' :: Nat -> Nat -> Nat
+mult'' Zero     n = Zero
+mult'' (Succ m) n = add n (mult'' m n)
+
+-- 8.9.2
+-- data Ordering = LT | EQ | GT
+-- compare :: Ord a => a -> a -> Ordering
+
+data Tree a = Leaf a | Node (Tree a) a (Tree a)
+occurs :: Ord a => a -> Tree a -> Bool
+occurs x (Leaf y) = x == y
+occurs x (Node left y right) | x == y    = True
+                             | x < y     = occurs x left
+                             | otherwise = occurs x right
+
+occurs' :: Ord a => a -> Tree a -> Bool
+occurs' x (Leaf y) = x == y
+occurs' x (Node left y right) = case compare x y of
+                                  LT -> occurs' x left
+                                  EQ -> True
+                                  GT -> occurs' x right
+-- occurs' 2 (Node (Node (Leaf 1) 3 (Leaf 4)) 5 (Node (Leaf 6) 7 (Leaf 9)))
+
+-- 8.9.3
+
+
+-- 8.9.4
+-- 8.9.5
+-- 8.9.6
+-- 8.9.7
+-- 8.9.8
+-- 8.9.9
 
