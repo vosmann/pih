@@ -405,10 +405,28 @@ balance [x,y] = Node' (Leaf' x) (Leaf' y)
 balance xs    = Node' (balance (fst halves)) (balance (snd halves))
     where halves = halve xs
 
-
 -- 8.9.5
+data Expr = Val Int | Add Expr Expr
+
+folde :: (Int -> a) -> (a -> a -> a) -> Expr -> a
+folde f g (Val n)   = f n
+folde f g (Add x y) = g (folde f g x) (folde f g y)
+
 -- 8.9.6
+eval :: Expr -> Int
+eval = folde id (\x y -> x+y)
+
+size :: Expr -> Int
+size = folde (\_ -> 1) (\x y -> x+y) 
+
+
 -- 8.9.7
+
+
 -- 8.9.8
+
+
 -- 8.9.9
+
+
 
