@@ -1,4 +1,4 @@
 # Programming in Haskell
 ## Solutions to exercises
 
-My solutions to Graham Hutton's Programming in Haskell, 2nd edition.
+Solutions to exercises in Graham Hutton's _Programming in Haskell, Second Edition_.
