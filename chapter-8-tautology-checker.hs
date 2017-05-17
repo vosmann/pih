@@ -22,7 +22,6 @@ find k t = head [v | (k',v) <- t, k'==k]
 
 type Subst = Assoc Char Bool
 
-
 eval :: Subst -> Prop -> Bool
 eval s (Const c) = c
 eval s (Var c) = find c s

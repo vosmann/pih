@@ -118,14 +118,14 @@ twoComprehensionsOneGenerator = [pair | pair <- concat [[(1, y1) | y1 <- [3, 4]]
 twoComprehensionsOneGenerator' = concat [ [(x, y) | x <- [1, 2]] | y <- [3, 4] ]
 
 -- 5.7.8
-find :: Eq a => a -> [(a, b)] -> [b]
-find k t = [v' | (k', v') <- t, k == k' ]
+find' :: Eq a => a -> [(a, b)] -> [b]
+find' k t = [v' | (k', v') <- t, k == k' ]
 
 positions :: Eq a => a -> [a] -> [Int]
 positions x xs = [i | (x', i) <- zip xs [0..], x == x']
 
 positions' :: Eq a => a -> [a] -> [Int]
-positions' x xs = find x $ zip xs [0..]
+positions' x xs = find' x $ zip xs [0..]
 
 -- 5.7.9
 scalarproduct :: [Int] -> [Int] -> Int
@@ -413,18 +413,88 @@ folde f g (Val n)   = f n
 folde f g (Add x y) = g (folde f g x) (folde f g y)
 
 -- 8.9.6
-eval :: Expr -> Int
-eval = folde id (\x y -> x+y)
+eval' :: Expr -> Int
+eval' = folde id (\x y -> x+y)
 
 size :: Expr -> Int
 size = folde (\_ -> 1) (\x y -> x+y) 
 
-
 -- 8.9.7
+data Maybe a = Nothing | Just a
+instance Eq a => Eq (Main.Maybe a) where
+    Main.Nothing == Main.Nothing = True
+    Main.Nothing == Main.Just x = False
+    Main.Just x == Main.Nothing = False
+    Main.Just x == Main.Just y = x == y
 
+--instance Eq a => Eq ([a]) where
+--    [] == []     = True
+--    (x:xs) == [] = False
+--    [] == (y:ys) = False
+--    (x:xs) == (y:ys) = (x == y) && xs == ys
 
 -- 8.9.8
+data Prop = Const Bool
+          | Var Char
+          | Not Prop
+          | And Prop Prop
+          | Imply Prop Prop
+          | Or Prop Prop
+          | Equiv Prop Prop
 
+p1 :: Prop
+p1 = And (Var 'A') (Not (Var 'A'))
+
+p2 :: Prop
+p2 = Imply (And (Var 'A') (Var 'B')) (Var 'A')
+
+p3 :: Prop
+p3 = Imply (Var 'A') (And (Var 'A') (Var 'B')) 
+
+p4 :: Prop
+p4 = Imply (And (Var 'A') (Imply (Var 'A') (Var 'B'))) (Var 'B')
+
+type Assoc k v = [(k,v)]
+find :: Eq a => a -> Assoc a b -> b
+find k t = head [v | (k',v) <- t, k'==k]
+
+type Subst = Assoc Char Bool
+
+eval :: Subst -> Prop -> Bool
+eval s (Const c) = c
+eval s (Var c) = find c s
+eval s (Not p) = not (eval s p) 
+eval s (And p q) = eval s p && eval s q
+eval s (Imply p q) = eval s p <= eval s q
+eval s (Or p q) = eval s p || eval s q
+eval s (Equiv p q) = eval s p == eval s q
+
+vars :: Prop -> [Char]
+vars (Const _)   = []
+vars (Var c)     = [c]
+vars (Not p)     = vars p
+vars (And p q)   = vars p ++ vars q
+vars (Imply p q) = vars p ++ vars q
+vars (Or p q) = vars p ++ vars q
+vars (Equiv p q) = vars p ++ vars q
+
+bools :: Int -> [[Bool]]
+bools 0 = [[]]
+bools n = map (False:) onelessbools ++ map (True:) onelessbools
+    where onelessbools = bools (n-1)
+
+rmdups :: Eq a => [a] -> [a]
+rmdups []     = []
+rmdups (x:xs) = x : filter (/=x) (rmdups xs)
+
+substs :: Prop -> [Subst]
+substs p = map (zip vs) (bools (length vs))
+    where vs = rmdups (vars p)
+
+isTaut :: Prop -> Bool
+isTaut p = and [eval s p | s <- substs p]
+
+p5 = Or (Var 'A') (Not (Var 'A')) 
 
 -- 8.9.9
 
