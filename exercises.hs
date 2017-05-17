@@ -387,6 +387,7 @@ occurs' x (Node left y right) = case compare x y of
 
 -- 8.9.3
 data Tree' a = Leaf' a | Node' (Tree' a) (Tree' a)
+    deriving (Eq, Ord, Show)
 
 nrleaves :: Tree' a -> Int
 nrleaves (Leaf' n)   = 1
@@ -397,6 +398,14 @@ balanced (Leaf' n)   = True
 balanced (Node' l r) = abs (nrleaves l - nrleaves r) <= 1 && balanced l && balanced r
 
 -- 8.9.4
+balance :: [Int] -> Tree' Int
+balance []    = error "Cannot transform empty list to tree."
+balance [x]   = Leaf' x
+balance [x,y] = Node' (Leaf' x) (Leaf' y)
+balance xs    = Node' (balance (fst halves)) (balance (snd halves))
+    where halves = halve xs
+
+
 -- 8.9.5
 -- 8.9.6
 -- 8.9.7
