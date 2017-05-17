@@ -368,9 +368,6 @@ mult'' Zero     n = Zero
 mult'' (Succ m) n = add n (mult'' m n)
 
 -- 8.9.2
--- data Ordering = LT | EQ | GT
--- compare :: Ord a => a -> a -> Ordering
-
 data Tree a = Leaf a | Node (Tree a) a (Tree a)
 occurs :: Ord a => a -> Tree a -> Bool
 occurs x (Leaf y) = x == y
@@ -385,9 +382,19 @@ occurs' x (Node left y right) = case compare x y of
                                   EQ -> True
                                   GT -> occurs' x right
 -- occurs' 2 (Node (Node (Leaf 1) 3 (Leaf 4)) 5 (Node (Leaf 6) 7 (Leaf 9)))
+-- data Ordering = LT | EQ | GT
+-- compare :: Ord a => a -> a -> Ordering
 
 -- 8.9.3
+data Tree' a = Leaf' a | Node' (Tree' a) (Tree' a)
 
+nrleaves :: Tree' a -> Int
+nrleaves (Leaf' n)   = 1
+nrleaves (Node' l r) = nrleaves l + nrleaves r
+
+balanced :: Tree' a -> Bool
+balanced (Leaf' n)   = True
+balanced (Node' l r) = abs (nrleaves l - nrleaves r) <= 1 && balanced l && balanced r
 
 -- 8.9.4
 -- 8.9.5
