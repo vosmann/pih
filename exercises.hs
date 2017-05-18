@@ -533,16 +533,6 @@ putBoard' :: Board' -> IO ()
 putBoard' ns = sequence_ [putRow r n | (r,n) <- zip [1..] ns]
 
 -- 10.10.4
-{-
-getLine :: IO String
-getLine = do x <- getChar
-             if x == '\n' then
-                 return []
-             else
-                 do xs <- getLine
-                    return (x:xs)
--}
-
 adder :: IO ()
 adder = do putStr "Input summand count: "
            r <- getNumber
@@ -565,9 +555,13 @@ adder' s r = if r > 0 then
 
 
 -- 10.10.5
-
+adderSeq :: IO ()
+adderSeq = do putStr "Input summand count: "
+              r    <- getNumber
+              nums <- sequence $ take r $repeat getNumber
+              putStr "Sum: "
+              putStrLn (show (sum nums))
 
 -- 10.10.6
-
 
 
