@@ -532,8 +532,42 @@ putBoardHelp ns row | row <= length ns =  do putRow row (ns !! (row-1))
 putBoard' :: Board' -> IO ()
 putBoard' ns = sequence_ [putRow r n | (r,n) <- zip [1..] ns]
 
-
 -- 10.10.4
+{-
+getLine :: IO String
+getLine = do x <- getChar
+             if x == '\n' then
+                 return []
+             else
+                 do xs <- getLine
+                    return (x:xs)
+-}
+
+adder :: IO ()
+adder = do putStr "Input summand count: "
+           r <- getNumber
+           adder' 0 r
+
+getNumber :: IO Int
+getNumber =  do s <- getLine
+                if all isDigit s then
+                    return (read s)
+                else
+                    error "Numbers should consist only of digits."
+
+adder' :: Int -> Int -> IO ()
+adder' s r = if r > 0 then
+                do num <- getNumber
+                   adder' (s+num) (r-1)
+             else 
+                do putStr "Sum: "
+                   putStrLn (show s)
+
+
 -- 10.10.5
+
+
+-- 10.10.6
+
 
 
