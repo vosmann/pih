@@ -563,5 +563,23 @@ adderSeq = do putStr "Input summand count: "
               putStrLn (show (sum nums))
 
 -- 10.10.6
+getCh :: IO Char
+getCh = do hSetEcho stdin False
+           x <- getChar
+           hSetEcho stdin True
+           return x
 
+readLine :: IO String
+readLine = readLine' ""
 
+readLine' :: String -> IO String
+readLine' cs = do c <- getCh
+                  case c of
+                      '\DEL' -> do putChar '\b'
+                                   readLine' (dropLast cs)
+                      '\n'   -> do putStr "Read line: "
+                                   return cs
+                      _      -> do putChar c 
+                                   readLine' (cs++[c])
+
+dropLast xs = if null xs then [] else init xs
