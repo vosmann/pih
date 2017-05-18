@@ -1,3 +1,7 @@
+--import Prelude hiding (getLine, putStr, putStrLn)
+--import System.IO hiding (getLine, putStr, putStrLn)
+import Prelude hiding (putStr)
+import System.IO hiding (putStr)
 import Data.Char
 import Data.Ord
 
@@ -502,8 +506,33 @@ p5 = Or (Var 'A') (Not (Var 'A'))
 -- Chapter 10: Interactive programming
 
 -- 10.10.1
+putStr :: String -> IO ()
+putStr xs = sequence_ [putChar x | x <- xs]
+
 -- 10.10.2
+putRow :: Int -> Int -> IO ()
+putRow row num = do putStr (show row)
+                    putStr ": "
+                    putStrLn (concat (replicate num "* "))
+
+type Board' = [Int]
+
+initial :: Board'
+initial = [7,6,5,4,3,2]
+
+putBoard :: Board' -> IO ()
+putBoard ns = putBoardHelp ns 1
+
+putBoardHelp :: Board' -> Int -> IO ()
+putBoardHelp ns row | row <= length ns =  do putRow row (ns !! (row-1))
+                                             putBoardHelp ns (row+1)
+                    | otherwise        = return ()
+
 -- 10.10.3
+putBoard' :: Board' -> IO ()
+putBoard' ns = sequence_ [putRow r n | (r,n) <- zip [1..] ns]
+
+
 -- 10.10.4
 -- 10.10.5
 
