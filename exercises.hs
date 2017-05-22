@@ -583,3 +583,21 @@ readLine' cs = do c <- getCh
                                    readLine' (cs++[c])
 
 dropLast xs = if null xs then [] else init xs
+
+
+-- Chapter 12: Monads and more
+
+-- 12.5.1
+data Tree a = Leaf | Node (Tree a) a (Tree a)
+    deriving Show
+
+instance Functor (Tree a) where
+    -- fmap :: (a -> b) -> f a -> f b
+    fmap g Leaf         = Leaf
+    fmap g (Node l v r) = Node (fmap g l) g v (fmap g l)
+
+-- 12.5.2
+-- 12.5.3
+-- 12.5.4
+-- 12.5.5
+-- 12.5.6
