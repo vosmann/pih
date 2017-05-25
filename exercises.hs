@@ -373,6 +373,8 @@ mult'' (Succ m) n = add n (mult'' m n)
 
 -- 8.9.2
 data Tree a = Leaf a | Node (Tree a) a (Tree a)
+    deriving Show
+
 occurs :: Ord a => a -> Tree a -> Bool
 occurs x (Leaf y) = x == y
 occurs x (Node left y right) | x == y    = True
@@ -588,19 +590,18 @@ dropLast xs = if null xs then [] else init xs
 -- Chapter 12: Monads and more
 
 -- 12.5.1
-data Tree a = Leaf | Node (Tree a) a (Tree a)
+data Tree'' a = Leaf'' | Node'' (Tree'' a) a (Tree'' a)
     deriving Show
 
-instance Functor (Tree a) where
+instance Functor Tree'' where
     -- fmap :: (a -> b) -> f a -> f b
-    fmap g Leaf         = Leaf
-    fmap g (Node l v r) = Node (fmap g l) (g v) (fmap g l)
+    fmap g Leaf''         = Leaf''
+    fmap g (Node'' l v r) = Node'' (fmap g l) (g v) (fmap g l)
 
 -- 12.5.2
-instance Functor ((->) a) where
-    -- fmap :: (b -> c) -> (a -> b) -> (a -> c)
-    fmap = (.)
-     
+-- instance Functor ((->) a) where
+       -- fmap :: (b -> c) -> (a -> b) -> (a -> c)
+--     fmap = (.)
 
 -- 12.5.3
 -- 12.5.4
