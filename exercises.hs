@@ -4,7 +4,7 @@ import Prelude hiding (putStr)
 import System.IO hiding (putStr)
 import Data.Char
 import Data.Ord
-import Control.Applicative hiding (Const)
+import Control.Applicative hiding (Const, ZipList)
 
 -- Chapter 4: Defining functions
 
@@ -619,13 +619,13 @@ newtype ZipList a = Z [a] deriving Show
 
 instance Functor ZipList where
     -- fmap :: (a -> b) -> ZipList a -> ZipList b
-    fmap g (Z xs) = Z (map g xs)
+    fmap g (Z xs) = Z (fmap g xs)
 
 instance Applicative ZipList where
     -- pure :: a -> ZipList a
     pure x = Z (repeat x)
     -- (<*>) :: ZipList (a -> b) -> ZipList a -> ZipList b
-    (Z gs) <$> (Z xs) = [g x | (g, x) <- zip gs xs]
+    (Z gs) <*> (Z xs) = Z [g x | (g, x) <- zip gs xs]
 
 -- 12.5.5
 -- Applicative laws and types of their variables
@@ -677,6 +677,30 @@ instance Applicative ZipList where
     -- \x -> y >>= \y -> (\x -> z) = \x -> z
     -- f       >>= h               = \u -> h (f u) u
 
-
 -- 12.5.7
+data Expression a = Variable a | Value Int | Addition (Expression a) (Expression a)
+                    deriving Show
+
+instance Functor Expression where
+    -- fmap :: (a -> b) -> Expression a -> Expression b
+    fmap g (Variable x)   = Variable (g x)
+    fmap g (Value i)      = Value i
+    fmap g (Addition x y) = Addition (fmap g x) (fmap g y)
+
+instance Applicative Expression where
+    -- pure  :: a -> Expression a
+    pure x  = Variable x
+    -- (<*>) :: Expression (a -> b) -> Expression a -> Expression b
+    Variable f <*> x       = fmap f x
+    Value x    <*> Value y = Addition (Value x) (Value y)
+
+instance Monad Expression where
+    -- (>>=) :: Expression a -> (a -> Expression b) -> Expression b
+    Value x      >>= f = Value x
+    Variable x   >>= f = f x
+    Addition x y >>= f = Addition (x >>= f) (y >>= f)
+
 -- 12.5.8
+
+
+
