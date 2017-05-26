@@ -627,6 +627,50 @@ instance Applicative ZipList where
     -- (<*>) :: ZipList (a -> b) -> ZipList a -> ZipList b
     (Z gs) <$> (Z xs) = [g x | (g, x) <- zip gs xs]
 
--- 12.5.4
 -- 12.5.5
+-- Applicative laws and types of their variables
+
+-- 1.
+-- pure id <*> x   = x
+--
+-- :t x
+-- f x
+
+-- 2.
+-- pure (g x)      = pure g <*> pure x
+--
+-- :t g
+-- (a -> b)
+-- :t x
+-- a
+
+-- 3.
+-- x <*> pure y    = pure (\g -> g y) <*> x
+--
+-- :t x
+-- f (a -> b)
+-- :t y
+-- a
+-- :t g
+-- a -> b
+
+-- 4.
+-- x <*> (y <*> z) = (pure (.) <*> x <*> y) <*> z
+--
+-- :t x
+-- 
+-- :t y
+-- 
+-- :t z
+-- 
+
 -- 12.5.6
+-- instance Monad ((->) a) where
+    -- return :: b -> a -> b
+    -- return =
+    -- (>>=) :: (a -> (* -> *)) -> (a -> *) -> (a -> *)
+    -- g >>= h = 
+
+
+-- 12.5.7
+-- 12.5.8
