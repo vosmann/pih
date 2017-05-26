@@ -4,6 +4,7 @@ import Prelude hiding (putStr)
 import System.IO hiding (putStr)
 import Data.Char
 import Data.Ord
+import Control.Applicative hiding (Const)
 
 -- Chapter 4: Defining functions
 
@@ -600,10 +601,34 @@ instance Functor Tree'' where
 
 -- 12.5.2
 -- instance Functor ((->) a) where
+       -- fmap :: (* -> *) -> (a -> *) -> (a -> *)
        -- fmap :: (b -> c) -> (a -> b) -> (a -> c)
 --     fmap = (.)
 
 -- 12.5.3
+-- instance Applicative ((->) a) where
+    -- pure :: b -> a -> b
+    -- pure    = const
+    -- (<*>) :: (a -> (* -> *)) -> (a -> *) -> (a -> *)
+    -- (<*>) :: (a ->  b -> c)  -> (a -> b) -> (a -> c)
+    -- g <*> h = \x -> g x (h x)
+
+
+{-
+-- 12.5.4
+newtype ZipList a = Z [a] deriving Show
+
+instance Functor ZipList where
+    -- fmap :: (a -> b) -> ZipList a -> ZipList b
+    fmap g (Z xs) = Z (map g xs)
+
+instance Applicative ZipList where
+    -- pure :: a -> ZipList a
+    pure x = Z (repeat x)
+    -- (<*>) :: ZipList (a -> b) -> ZipList a -> ZipList b
+    (Z gs) <$> (Z xs) = 
+-}
+
 -- 12.5.4
 -- 12.5.5
 -- 12.5.6
