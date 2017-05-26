@@ -614,7 +614,6 @@ instance Functor Tree'' where
     -- g <*> h = \x -> g x (h x)
 
 
-{-
 -- 12.5.4
 newtype ZipList a = Z [a] deriving Show
 
@@ -626,8 +625,7 @@ instance Applicative ZipList where
     -- pure :: a -> ZipList a
     pure x = Z (repeat x)
     -- (<*>) :: ZipList (a -> b) -> ZipList a -> ZipList b
-    (Z gs) <$> (Z xs) = 
--}
+    (Z gs) <$> (Z xs) = [g x | (g, x) <- zip gs xs]
 
 -- 12.5.4
 -- 12.5.5
