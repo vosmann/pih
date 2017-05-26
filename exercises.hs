@@ -658,18 +658,24 @@ instance Applicative ZipList where
 -- x <*> (y <*> z) = (pure (.) <*> x <*> y) <*> z
 --
 -- :t x
--- 
+-- TODO
 -- :t y
--- 
+-- TODO
 -- :t z
--- 
+-- TODO
 
 -- 12.5.6
 -- instance Monad ((->) a) where
-    -- return :: b -> a -> b
-    -- return =
-    -- (>>=) :: (a -> (* -> *)) -> (a -> *) -> (a -> *)
-    -- g >>= h = 
+    -- pure :: b -> a -> b
+    -- pure    = const
+    -- return  = pure
+    -- (>>=) :: (a -> *) -> (* -> (a -> **)) -> (a -> **)
+    -- (>>=) :: (a -> b) -> (b -> (a -> c )) -> (a -> c )
+    -- (>>=) :: (a -> b) -> (b ->  a -> c  ) -> (a -> c )
+    -- (>>=) :: m b      -> (b ->  m c     ) -> m c       -- m x is a function
+    -- (>>=) :: f        -> (y ->  g       ) -> g         -- m b = f, m c = g, b -> a -> c = h
+    -- \x -> y >>= \y -> (\x -> z) = \x -> z
+    -- f       >>= h               = \u -> h (f u) u
 
 
 -- 12.5.7
