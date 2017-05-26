@@ -701,6 +701,30 @@ instance Monad Expression where
     Addition x y >>= f = Addition (x >>= f) (y >>= f)
 
 -- 12.5.8
+type State = Int
+newtype ST a = S (State -> (a, State))
 
+app :: ST a -> State -> (a, State)
+app (S st) x = st x
 
+instance Monad ST where
+    -- (>>=) :: ST a -> (a -> ST b) -> ST b
+    st >>= f = S(\s -> let (x, s') = app st s in app (f x) s')
+
+instance Functor ST where
+    -- fmap :: (a -> b) -> ST a          -> ST b
+    -- fmap :: (a -> b) -> (s -> (a, s)) -> (s -> (b, s))
+    fmap g st = do x <- st
+                   return (g x)
+
+instance Applicative ST where
+    -- pure :: a -> ST a
+    -- pure :: a -> (s -> (a, s))
+    pure x = S (\s -> (x, s))
+
+    -- (<*>) :: ST (a -> b)                 -> ST a          -> ST b
+    -- (<*>) :: (s -> ((a -> b), s)) -> (s -> (a, s)) -> (s -> (b, s))
+    stf <*> stx = do f <- stf
+                     x <- stx
+                     return (f x)
 
