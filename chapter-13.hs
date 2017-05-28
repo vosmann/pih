@@ -249,6 +249,60 @@ run = do cls
 -- Exercises
 
 -- 13.11.1
+comment :: Parser ()
+comment = do symbol "--"
+             many (sat (/= '\n'))
+             string "\n"
+             return ()
+
 -- 13.11.2
+-- Second grammar:
+-- expr   ::= expr + expr | term
+-- term   ::= term * term | factor
+-- factor ::= (expr) | nat
+-- nat    ::= 0 | 1 | 2 | ...
+--
+-- Draw the two possible parse trees for expression "2+3+4".
+--
+--      expr
+--     /  |  \
+-- term   +    expr
+--  |         /  |  \
+-- factor  term  +  term
+--  |       |        |
+-- nat    factor    factor
+--  |       |        |
+-- 2       nat      nat
+--          |        |
+--          3        4
+--
+--           expr
+--          /  |  \
+--      expr   +  term
+--    /  |  \        |
+-- term  +  term   factor
+--  |        |       |
+-- factor   factor  nat
+--  |        |       |
+-- nat      nat      4
+--  |        |
+--  2        3
+--
+
 -- 13.11.3
+-- Third grammar:
+-- expr   ::= expr + expr | term
+-- term   ::= term * term | factor
+-- factor ::= (expr) | nat
+-- nat    ::= 0 | 1 | 2 | ...
+-- 
+-- Draw the parse trees for expressions "2+3", "2*3*4" and "(2+3)+4".
+--
+
+
 -- 13.11.4
+-- 13.11.5
+-- 13.11.6
+-- 13.11.7
+-- 13.11.8
+-- 13.11.9
