@@ -354,8 +354,28 @@ comment = do symbol "--"
 --
 
 -- 13.11.4
+-- Less backtracking.
+
 -- 13.11.5
+
+
 -- 13.11.6
+-- In code above.
+
 -- 13.11.7
+-- expr   ::= term + expr | term
+-- term   ::= pow  * term | pow
+-- pow    ::= factor ^ pow | factor
+-- factor ::= (expr) | nat
+-- nat    ::= 0 | 1 | 2 | ...
+--
+-- expr   ::= term   (+ expr | empty)
+-- term   ::= pow    (* term | empty)
+-- pow    ::= factor (^ pow | empty)
+-- factor ::= (expr) | nat
+-- nat    ::= 0 | 1 | 2 | ...
+--
+
+
 -- 13.11.8
 -- 13.11.9
