@@ -289,16 +289,69 @@ comment = do symbol "--"
 --  2        3
 --
 
--- 13.11.3
--- Third grammar:
--- expr   ::= expr + expr | term
--- term   ::= term * term | factor
+-- 13.11.3 -- Third grammar (associates to the right):
+-- expr   ::= term + expr | term
+-- term   ::= factor * term | factor
+-- factor ::= (expr) | nat
+-- nat    ::= 0 | 1 | 2 | ...
+--
+-- expr   ::= term (+ expr | empty)
+-- term   ::= factor (* term | empty)
 -- factor ::= (expr) | nat
 -- nat    ::= 0 | 1 | 2 | ...
 -- 
 -- Draw the parse trees for expressions "2+3", "2*3*4" and "(2+3)+4".
 --
-
+-- 2+3
+--
+--      expr
+--    /  |  \
+-- term  +  expr
+--  |        |
+-- factor   term
+--  |        |
+-- nat      factor
+--  |        |
+--  2       nat 
+--           |
+--           3
+--
+-- 2*3*4
+--
+--          term
+--         /  |  \
+--   factor   *   term
+--     |          /  |  \
+--    nat    factor  *   term
+--     |       |           |
+--     2      nat        factor
+--             |           |
+--             3          nat
+--                         |
+--                         4
+--
+-- (2+3)+4
+--
+--            expr
+--           /  |  \
+--        term  +  expr
+--        |           |
+--      factor      term
+--     /  |   \       |
+--    (  expr  )    factor
+--        |           |
+--       expr        nat
+--      /  |  \       |
+--   term  +  expr    4
+--    |         |
+--  factor    term 
+--    |         |
+--   nat      factor    
+--    |         |
+--    2        nat
+--              |
+--              3
+--
 
 -- 13.11.4
 -- 13.11.5
