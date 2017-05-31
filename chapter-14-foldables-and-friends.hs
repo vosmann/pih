@@ -59,6 +59,11 @@ instance Traversable Maybe where
 data Tree a = Leaf | Node (Tree a) a (Tree a)
               deriving Show
 
+instance Functor Tree where
+    -- fmap :: (a -> b) -> f a -> f b
+    fmap g Leaf         = Leaf
+    fmap g (Node l x r) = Node (fmap g l) (g x) (fmap g l)
+
 instance Foldable Tree where
     -- fold    :: Monoid a => Tree a -> a
     fold Leaf         = mempty
@@ -72,9 +77,9 @@ instance Foldable Tree where
     foldl _ v Leaf         = v
     foldl f v (Node l x r) = foldl f (foldl f (f v x) l) r
 
---instance Traversable Tree where
-    -- traverse :: Applicative f => (a -> f b) -> Maybe a -> f (Maybe b)
-
-
+instance Traversable Tree where
+    -- traverse :: Applicative f => (a -> f b) -> Tree a -> f (Tree b)
+    traverse g Leaf         = pure Leaf
+    traverse g (Node l x r) = pure Node <*> (traverse g l) <*> (g x) <*> (traverse g r)
 
 -- 14.5.5
