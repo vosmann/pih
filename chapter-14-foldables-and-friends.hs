@@ -81,5 +81,12 @@ instance Traversable Tree where
     -- traverse :: Applicative f => (a -> f b) -> Tree a -> f (Tree b)
     traverse g Leaf         = pure Leaf
     traverse g (Node l x r) = pure Node <*> (traverse g l) <*> (g x) <*> (traverse g r)
+    -- traverse (Just . (*1000)) (Node (Node (Leaf) 2 (Leaf)) 1 (Node (Leaf) 3 (Leaf)))
 
 -- 14.5.5
+instance Monoid [a] where
+    mempty  = []
+    mappend = (++)
+
+filterF :: Foldable t => (a -> Bool) -> t a -> [a]
+filterF p foldable = filter p (foldMap (\x -> [x]) foldable)
