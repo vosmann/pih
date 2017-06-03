@@ -54,5 +54,19 @@ mult = \x -> (\y -> x*y)
 -- 12
 
 -- 15.9.4
+morefibs :: [Integer] -> [Integer]
+morefibs (x:y:_) = x:(morefibs [y,z])
+                   where z = x+y
+
+fibs :: [Integer]
+fibs = morefibs [0,1]
+
+--nextfibs :: [Integer] -> [Integer]
+--nextfibs xs = xs ++ [x+y | (x,y) <- zip xs (tail xs)]
+
+
+
+
 -- 15.9.5
+
 -- 15.9.6
