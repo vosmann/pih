@@ -64,9 +64,46 @@ fibs = morefibs [0,1]
 --nextfibs :: [Integer] -> [Integer]
 --nextfibs xs = xs ++ [x+y | (x,y) <- zip xs (tail xs)]
 
-
-
-
 -- 15.9.5
+{-
+repeat :: a -> [a]
+repeat x = xs where xs = x:xs
+
+take :: Int -> [a] -> [a]
+take 0 _      = []
+take n []     = []
+take n (x:xs) = x : take (n-1) xs
+
+replicate :: Int -> a -> [a]
+replicate n = take n . repeat
+-}
+
+data Tree a = Leaf | Node (Tree a) a (Tree a)
+              deriving Show
+
+repeat' :: a -> Tree a
+repeat' x = Node (repeat' x) x (repeat' x)
+
+take' :: Int -> Tree a -> Tree a
+take' 0 _            = Leaf
+take' n Leaf         = Leaf 
+take' n (Node l v r) = Node (take' smallhalf l) v (take' bighalf r)
+                       where remainder = n-1
+                             smallhalf = remainder `div` 2
+                             bighalf = smallhalf + (remainder `mod` 2)
+
+replicate' :: Int -> a -> Tree a 
+replicate' n = take' n . repeat'
+
+exampleTree :: Tree Int
+exampleTree = (Node (Node Leaf 2 Leaf) 4 (Node Leaf 1 Leaf))
+-- take' 1 exampleTree 
+-- take' 2 exampleTree
+-- take' 3 exampleTree
+-- take' 4 exampleTree
+-- replicate' 0 8
+-- replicate' 1 8
+-- replicate' 5 8
 
 -- 15.9.6
+
