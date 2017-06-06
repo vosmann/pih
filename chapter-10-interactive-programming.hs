@@ -1,8 +1,8 @@
-module ChapterTen where
-
 import Prelude hiding (getLine, putStr, putStrLn)
 import System.IO hiding (getLine, putStr, putStrLn)
 import Data.Char
+
+-- Chapter 10: Interactive programming
 
 getLine :: IO String
 getLine = do x <- getChar
@@ -90,12 +90,12 @@ putRow row num = do putStr (show row)
                     putStr ": "
                     putStrLn (concat (replicate num "* "))
 
-putBoard :: Board' -> IO ()
-putBoard [a,b,c,d,e] = do putRow 1 a
-                          putRow 2 b
-                          putRow 3 c
-                          putRow 4 d
-                          putRow 5 e
+putFiveRowBoard :: Board' -> IO ()
+putFiveRowBoard [a,b,c,d,e] = do putRow 1 a
+                                 putRow 2 b
+                                 putRow 3 c
+                                 putRow 4 d
+                                 putRow 5 e
 
 newline :: IO ()
 newline = putChar '\n'
@@ -113,7 +113,7 @@ getDigit prompt = do putStr prompt
 play' :: Board' -> Int -> IO ()
 play' board player = 
    do newline
-      putBoard board
+      putFiveRowBoard board
       if finished board then
          do newline
             putStr "Player "
@@ -205,3 +205,72 @@ wait n = sequence_ [return () | _ <- [1..n]]
 
 glider :: Board
 glider = [(4,2),(2,3),(4,3),(3,4),(4,4)]
+
+
+-- 10.10.1
+putStr' :: String -> IO ()
+putStr' xs = sequence_ [putChar x | x <- xs]
+
+-- 10.10.2
+initial' :: Board'
+initial' = [7,6,5,4,3,2]
+
+putBoard :: Board' -> IO ()
+putBoard ns = putBoardHelp ns 1
+
+putBoardHelp :: Board' -> Int -> IO ()
+putBoardHelp ns row | row <= length ns =  do putRow row (ns !! (row-1))
+                                             putBoardHelp ns (row+1)
+                    | otherwise        = return ()
+
+-- 10.10.3
+putBoard' :: Board' -> IO ()
+putBoard' ns = sequence_ [putRow r n | (r,n) <- zip [1..] ns]
+
+-- 10.10.4
+adder :: IO ()
+adder = do putStr "Input summand count: "
+           r <- getNumber
+           adder' 0 r
+
+getNumber :: IO Int
+getNumber =  do s <- getLine
+                if all isDigit s then
+                    return (read s)
+                else
+                    error "Numbers should consist only of digits."
+
+adder' :: Int -> Int -> IO ()
+adder' s r = if r > 0 then
+                do num <- getNumber
+                   adder' (s+num) (r-1)
+             else 
+                do putStr "Sum: "
+                   putStrLn (show s)
+
+-- 10.10.5
+adderSeq :: IO ()
+adderSeq = do putStr "Input summand count: "
+              r    <- getNumber
+              nums <- sequence $ take r $repeat getNumber
+              putStr "Sum: "
+              putStrLn (show (sum nums))
+
+-- 10.10.6
+readLine :: IO String
+readLine = readLine' ""
+
+readLine' :: String -> IO String
+readLine' cs = do c <- getCh
+                  case c of
+                      '\DEL' -> do putChar '\b'
+                                   readLine' (dropLast cs)
+                      '\n'   -> do putStr "Read line: "
+                                   return cs
+                      _      -> do putChar c 
+                                   readLine' (cs++[c])
+
+dropLast xs = if null xs then [] else init xs
+
+
+
