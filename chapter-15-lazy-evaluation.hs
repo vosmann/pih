@@ -106,4 +106,18 @@ exampleTree = (Node (Node Leaf 2 Leaf) 4 (Node Leaf 1 Leaf))
 -- replicate' 5 8
 
 -- 15.9.6
+next :: Double -> Double -> Double
+next n = \a -> (a + n/a) / 2
 
+approximate :: Double -> [Double]
+approximate n = take 30 $ iterate (next n) 1.0
+
+sqroot :: Double -> Double -> Double
+sqroot n e = head (dropUntilSmallerThan e approximations)
+             where approximations = iterate (next n) 1.0
+
+dropUntilSmallerThan :: Double -> [Double] -> [Double]
+dropUntilSmallerThan e (x:y:xs) = if abs (x-y) < e then [y] else dropUntilSmallerThan e (y:xs)
+
+-- Using iterate with next means a new value is calculated in every iteration,
+-- with all previous values also being kept. Not very similar to using strict application or foldl'.
