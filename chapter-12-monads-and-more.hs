@@ -18,7 +18,7 @@ instance Functor Tree where
     -- fmap = (.)
 
 -- 12.5.3
--- instance Functor ((->) a) where --TODO Applicative
+-- instance Applicative ((->) a) where
     -- pure :: b -> (a -> b)
     -- pure    = const
     -- (<*>) :: (a -> (* -> *)) -> (a -> *) -> (a -> *)
